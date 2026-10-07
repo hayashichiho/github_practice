@@ -5,7 +5,7 @@
 1. [Quest 1: セットアップ](issues/01-setup.md)で起動とテストを確認する。
 2. [Quest 2: branch](issues/02-branches.md)で作業場所を分ける。
 3. [Quest 3: 最初の実装・commit・PR](issues/03-add-task.md)で一連の操作を練習する。
-4. Quest 4〜8で機能を追加しながら、PR・review・merge・情報共有を学ぶ。
+4. Quest 4〜8で機能を追加しながら、PR・review・mergeを練習する。
 5. [Quest 9: main更新](issues/09-progress-and-sync.md)、[Quest 10: 競合](issues/10-conflict.md)を練習する。
 
 ```text

@@ -9,7 +9,7 @@
 3. 左側の **練習用Issueを登録** を選び、**Run workflow → Branch: main → Run workflow** を押す。自分のForkの所有者として実行する。
 4. 実行が成功したら、同じForkの **Issues** で10件を確認する。Actionsの実行結果のSummaryにもIssue番号を表示する。
 
-原稿の先頭見出しをタイトル、残りを本文にして登録します。branch名と、PRを作る課題の `Closes #番号` は、作成された実際のIssue番号に自動で合わせます。Quest番号とIssue番号が一致する必要はありません。
+原稿の先頭見出しをタイトル、残りを本文にして登録します。branch名と、PRを作る課題の `Closes #番号` は、作成された実際のIssue番号に自動で合わせます。画像・資料リンクもIssue用のパスへ変換します。Quest番号とIssue番号が一致する必要はありません。
 
 再実行では登録済み課題をスキップします。ClosedのIssueも作り直さず、登録後のメモや編集も保持します。重複判定には本文末尾の非表示マーカーを使うため、そのマーカーは残してください。同じタイトルの手動Issueもスキップしますが、手動Issueの番号は自分で確認してください。
 
@@ -26,7 +26,7 @@ workflowは登録済み課題の内容更新・削除・再オープンは行い
 
 1. 練習するForkの **Issues → New issue** を開く。
 2. 下の課題ファイルの先頭見出しをタイトル、残りを本文にコピーする。
-3. 作成されたIssueの実際の番号を確認し、本文のbranch名・`Closes #番号` の数字を置き換える。
+3. 作成されたIssueの実際の番号を確認し、本文のbranch名・`Closes #番号` の数字を置き換える。画像はIssueの編集欄へドラッグして添付し、資料へのリンクはGitHub上のファイルのURLへ置き換える。
 4. 残りの課題も同じように登録する。
 
 練習用PRはIssueと同じForkのmainへ送ります。Quest 1・2は変更やPRが不要なので、確認結果をIssueにコメントして手動で閉じます。Quest 3以降は前のPRがmergeされてから次へ進みます。
@@ -37,10 +37,10 @@ workflowは登録済み課題の内容更新・削除・再オープンは行い
 2. [branchの分け方と名前](02-branches.md)
 3. [タスク追加・commit・最初のPR](03-add-task.md)
 4. [完了切り替え・PRの変更範囲](04-toggle-task.md)
-5. [削除・review後の修正](05-delete-task.md)
-6. [フィルター・merge後の同期](06-filter-tasks.md)
-7. [保存・エラーの共有](07-persist-tasks.md)
-8. [編集・チーム内の分担](08-edit-task.md)
+5. [タスクの削除](05-delete-task.md)
+6. [タスクのフィルター](06-filter-tasks.md)
+7. [タスクの保存](07-persist-tasks.md)
+8. [タスク名の編集](08-edit-task.md)
 9. [進捗表示・main更新の取り込み](09-progress-and-sync.md)
 10. [Conflictの解消](10-conflict.md)
 

@@ -8,7 +8,7 @@ branchの基礎と名前は [Quest 2](issues/02-branches.md)、最初のcommit�
 
 - `feature/1-add-task-form`
 - `feature/2-toggle-task`
-- `fix/3-delete-task`
+- `feature/3-delete-task`
 - `docs/7-update-readme`
 
 番号はQuest番号ではなく、GitHubの実際のIssue番号です。これらは例なので自分のIssueに合わせて置き換えてください。競合練習には `practice/<Issue番号>-conflict` を使います。

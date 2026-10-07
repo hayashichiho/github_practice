@@ -1,6 +1,6 @@
 # 教材の公開・更新ガイド
 
-このページは教材を配布する人向けです。練習者はREADMEの「Forkした後にすること」から1人で進められます。進行役やCollaboratorの招待は不要です。
+このページは教材を配布する人向けです。練習者はREADMEの「練習手順」から1人で進められます。進行役やCollaboratorの招待は不要です。
 
 配布元は [hayashichiho/github_practice](https://github.com/hayashichiho/github_practice) です。構成はReact + TypeScript + Viteです。練習者は自分のForkに課題Issueを登録し、そのForkのmainへPRをmergeします。
 

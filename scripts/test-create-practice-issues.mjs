@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { githubClient, loadQuests, registerQuests } from './create-practice-issues.mjs';
+import { githubClient, issueBody, loadQuests, registerQuests } from './create-practice-issues.mjs';
 
 function fakeApi(issues = []) {
   let number = 12;
@@ -47,6 +47,22 @@ test('再実行で、閉じた・改題したIssueも重複せず、編集した
   await registerQuests(api, quests);
   assert.equal(api.created, 10);
   assert.deepEqual(api.issues, before);
+});
+
+test('画像と資料リンクを同じForkのIssue用パスに変換し、外部URLは保持する', async () => {
+  const quests = await loadQuests();
+  const branchBody = issueBody(quests[1], 12);
+  const formBody = issueBody(quests[2], 13);
+  const conflictBody = issueBody(quests[9], 20);
+  assert.match(branchBody, /\.\.\/blob\/main\/docs\/issues\/image\/02-branches\/\d+\.png\?raw=true/);
+  assert.match(formBody, /\.\.\/blob\/main\/docs\/issues\/image\/03-add-task\/\d+\.png\?raw=true/);
+  assert.match(formBody, /Closes #13/);
+  assert.match(conflictBody, /\[Quest 3\]\(\.\.\/blob\/main\/docs\/issues\/03-add-task\.md\)/);
+  assert.match(conflictBody, /\.\.\/blob\/main\/docs\/04_conflict\.md/);
+  assert.match(branchBody, /https:\/\/code\.visualstudio\.com\/docs\/sourcecontrol\/branches-worktrees/);
+  for (const quest of quests) {
+    assert.doesNotMatch(issueBody(quest, 99), /\]\((?:image\/|\.\.\/04_conflict|03-add-task)/);
+  }
 });
 
 test('同名の手動Issueは保持し、同名のPRは登録済み課題とみなさない', async () => {

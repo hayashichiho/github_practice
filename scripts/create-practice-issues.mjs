@@ -1,5 +1,6 @@
 import { readdir, readFile, appendFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { posix } from 'node:path';
 
 const pendingMarker = '<!-- github-practice:pending -->';
 
@@ -26,7 +27,15 @@ export function issueBody(quest, number) {
       '以下のbranch名と `Closes` は、このIssueの実際の番号に合わせて登録されています。最新mainからbranchを作ります。')
     .replace(/（`\d+` は実際のIssue番号へ置き換えてください）/g, '')
     .replace(/\b(feature|fix|docs|practice)\/\d+(?=-)/g, `$1/${number}`)
-    .replace(/Closes #\d+/g, `Closes #${number}`)}\n\n${quest.marker}`;
+    .replace(/Closes #\d+/g, `Closes #${number}`)
+    // 原稿ファイルからの相対リンクを、同じForkのIssueから使えるパスに変換する。
+    .replace(/(!?\[[^\]\n]*\])\(([^\s)]+)\)/g, (match, label, target) => {
+      if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(target)) return match;
+      const path = target.startsWith('/')
+        ? target.slice(1)
+        : posix.normalize(posix.join('docs/issues', target));
+      return `${label}(../blob/main/${path}${label.startsWith('!') ? '?raw=true' : ''})`;
+    })}\n\n${quest.marker}`;
 }
 
 /** 未登録課題だけを作成する。番号反映に失敗したIssueは次回の実行で復旧する。 */

@@ -1,51 +1,67 @@
 # Quest 3: タスクを追加できるフォームを作る
 
-## 背景
-
-今は初期タスクが表示されるだけです。チームで取り組むタスクを自分たちで登録できるようにしましょう。
-
 ## やること
 
-`src/App.tsx` にタスク名の入力欄と「追加」ボタンを作り、送信したタスクを一覧の末尾に表示してください。
+`src/App.tsx` にタスク名の入力欄と「追加」ボタンを作り、追加したタスクを一覧の末尾に表示してください。
 
 ## 完了条件
 
-- 文字を入力して追加すると、一覧に新しいタスクが表示される
+- 入力したタスクが追加され、追加後に入力欄が空になる
 - 空文字や空白だけでは追加されない
-- 追加後に入力欄が空になる
-- 追加処理のテストを用意し、`npm test` と `npm run build` が通る
+- 追加処理のテストがあり、`npm test` と `npm run build` が通る
+- PRをmergeし、このIssueがClosedになっている
 
-## Git Quest
+## 手順
 
-branch名の数字と `Closes` の番号は例です。Quest番号ではなく、GitHubで作成されたこのIssueの実際の番号に置き換えてください。最新mainからbranchを作ります。
+画像内のリポジトリ名やブランチ名は、自分のものに読み替えてください。
 
-最新のmainから `feature/3-add-task-form` を作成し、このIssueの変更だけをcommitしてください。PR本文には `Closes #3` を入れます。
+1. Quest 2を参考に、VS Codeの左下のブランチ名からmainへ切り替える。その上で、ターミナルで次を実行してmainを更新する。
 
 ```bash
-git switch main
-git pull --ff-only origin main
-git switch -c feature/3-add-task-form
+git pull origin main
 ```
 
-Quest 2の練習branchからmainへ戻って作ります。`3` は実際のIssue番号に置き換えてください。
+2. VS Codeの左下のブランチ名をクリックし、**「新しいブランチの作成…」** から `feature/3-add-task-form` を作成する。左下に作成したブランチ名が表示されることを確認する。
 
-## commitして最初のPRを作る
-
-commitはローカルに変更を記録し、pushはそのcommitをGitHubへ送る操作です。ハッカソンでは、意味が伝わる小さな単位でcommitすると、変更を追いやすくなります。
+3. `src/App.tsx` にフォームを実装し、`tests/App.test.tsx` に追加処理のテストを書く。タスクが追加されること、追加後に入力欄が空になること、空白だけでは追加されないことを確認する。
+4. `npm test` と `npm run build` が通ったら、差分を確認してcommit・pushする。
 
 ```bash
-npm test
-npm run build
-git status
-git diff
 git add src/App.tsx tests/App.test.tsx
-git diff --cached
 git commit -m "feat: add task form"
 git push -u origin feature/3-add-task-form
 ```
 
-自分のForkでPull requests → New pull requestを開き、base repository・head repositoryを両方とも自分のForkにします。baseはmain、compareは作業branchです。変更内容・テスト結果・`Closes #3` を書いてPRを作ります。番号はこのIssueの実際の番号に合わせてください。
+5. GitHubで自分のForkを開き、**Compare & pull request** を押す。表示されない場合は **Pull requests → New pull request** を選ぶ。
 
-自分で差分を確認・修正してmergeし、Issueが閉じることを確認します。最後に `git switch main` と `git pull --ff-only origin main` でローカルmainを更新します。詳しい確認の観点は `docs/03_pull_request_review.md` にあります。
+![push後に表示されるCompare & pull requestボタン](image/03-add-task/1791359129557.png)
+
+6. PRの送り先（base）が**自分のForkのmain**、compareが作業ブランチであることを確認する。タイトルに「タスク追加フォームを実装」など変更内容を書き、本文のテンプレートを埋めて **Create pull request** を押す。
+
+![PRの送り先とタイトル・本文を入力する画面](image/03-add-task/1791359116338.png)
+
+本文の記入例です。`Closes #3` は、merge時に指定したIssueを閉じる指定です。
+
+```md
+## 変更内容
+タスク追加フォームを実装しました。
+
+## 確認したこと
+- [x] npm test
+- [x] npm run build
+
+Closes #3
+```
+
+7. **Files changed** で差分を確認する。修正があれば同じブランチへcommit・pushし、PRを更新する。
+8. 確認が終わったら **Merge pull request → Confirm merge** でmergeする。今回は1人での練習なので自分で行う。チーム開発では、通常は他の人にレビューしてもらう。
+
+![PRをmainへ取り込むMerge pull requestボタン](image/03-add-task/1791359170154.png)
+
+9. IssueがClosedになったことを確認し、VS Codeでmainへ切り替える。その上で、次を実行してmergeした変更を取り込む。
+
+```bash
+git pull origin main
+```
 
 <!-- github-practice:quest:01-add-task.md -->
