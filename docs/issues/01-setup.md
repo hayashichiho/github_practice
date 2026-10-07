@@ -26,16 +26,14 @@ npm run dev
 ```bash
 npm test
 npm run build
-git config user.name "自分の名前"
-git config user.email "自分のメールアドレス"
 ```
 
-メールを公開したくない場合はGitHubのSettings → Emailsのnoreplyアドレスを使えます。`npm ci` はロックファイルに沿って依存関係を揃える操作です。
+`npm ci` はロックファイルに沿って依存関係を揃える操作です。
 
 ## 完了条件
 
 - アプリが表示され、テストとビルドが成功する
-- `origin` が自分のForkで、commitの作者情報を設定している
+- `origin` が自分のForkのURLになっている
 - 実行結果をこのIssueにコメントし、**Close issue** で閉じる
 
 このQuestではファイルの変更やPRは不要です。追加・完了ボタンが動かないのは後の課題で実装するためです。

@@ -1,6 +1,6 @@
 # GitHub Practice: チーム開発入門
 
-GitHubでのチーム開発が初めての人向けの練習用プロジェクトです。React + TypeScript + Viteで小さなタスク管理Webアプリ「Team Quest Board」を育てながら、Issue → branch → commit → Pull Request → review → mergeを練習します。
+GitHubを使ったことはあるけれど、チーム開発は初めての人向けの練習用プロジェクトです。React + TypeScript + Viteで小さなタスク管理Webアプリ「Team Quest Board」を育てながら、Issue → branch → commit → Pull Request → review → mergeを練習します。
 
 ## 練習手順
 

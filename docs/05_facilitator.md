@@ -23,8 +23,6 @@ git rev-parse --show-toplevel
 
 ```bash
 git init -b main
-git config user.name "自分の名前"
-git config user.email "自分のメールアドレス"
 git rev-parse --show-toplevel
 git status --short
 ```
