@@ -1,34 +1,57 @@
-# Quest 2: 作業branchを作り、名前を付ける
+# Quest 2: 作業ブランチを作り、名前を付ける
 
 ## 学ぶこと
 
-branchは変更の履歴を分ける作業場所です。ハッカソンでは担当機能ごとにbranchを分けると、他の人の作業を邪魔せず、PRの差分も確認しやすくなります。mainは取り込み済みのコードを集める場所です。
+ブランチは、変更の履歴を分けるための作業場所です。チーム開発では、`main` から機能ごとの作業ブランチを作り、実装後にPRでレビューを受けてからmainへ統合します。作業をブランチごとに分けることで、複数人が並行して開発しやすくなります。
 
-branch名は `<種類>/<実際のIssue番号>-<短い説明>` にします。
-
-- `feature`: 機能追加（例: `feature/3-add-task-form`）
-- `fix`: 不具合修正（例: `fix/3-empty-title`）
-- `docs`: 文書の変更
-- `practice`: Git操作の練習
-
-小文字とハイフンを使い、目的が伝わる名前を付けます。**Quest番号とGitHubのIssue番号は別です。** この原稿の番号は例なので、実際のIssueに合わせてください。
-
-## やること
-
-```bash
-git status
-git switch main
-git pull --ff-only origin main
-git switch -c practice/2-branch-basics
-git branch --show-current
+```mermaid
+gitGraph
+    commit id: "共通のコード"
+    branch feature
+    checkout feature
+    commit id: "機能を実装"
+    commit id: "確認・修正"
+    checkout main
+    merge feature id: "PRをmerge"
 ```
 
-未commitの変更がある場合は、切り替える前に変更を確認・保存します。`git switch -c` は新しいbranchを作って切り替える操作です。branchを作っただけではGitHubには反映されません。
+### ブランチ名
 
-次のQuestではこのbranchからmainへ戻り、最新mainから機能追加用のbranchを作ります。この練習branchは残しておいて構いません。
+この練習では `<種類>/<Issue番号>-<短い説明>` の形式にします。たとえば、Issue #3でタスク追加フォームを作る場合は `feature/3-add-task-form` です。
+
+下記は、よく使うブランチの種類の例です。
+
+| 種類 | 用途 |
+| --- | --- |
+| `feature/` | 新機能の追加 |
+| `fix/` | 不具合の修正 |
+| `hotfix/` | 本番環境の緊急修正 |
+| `refactor/` | 動作を変えずにコードの構造を改善 |
+| `docs/` | ドキュメントの変更 |
+| `style/` | 動作を変えない書式・整形の変更 |
+| `chore/` | 環境設定などの保守作業 |
+| `practice/` | この教材でのGit操作の練習 |
+
+## やること: VS Codeで作成・切り替えする
+
+1. cloneしたプロジェクトをVS Codeで開く。未commitの変更がある場合は、ブランチを切り替える前に内容を確認してcommitする。
+2. 左下のブランチ名をクリックする。（画像ではmain）
+
+![VS Codeでmainブランチを選択する画面](image/02-branches/1791357124090.png)
+
+3. **「新しいブランチの作成…」** を選ぶ。
+
+![ブランチ選択メニューの「新しいブランチの作成」](image/02-branches/1791356830341.png)
+
+4. ブランチ名として `practice/2-branch-basics` と入力する。作成後、左下に新しいブランチ名が表示されることを確認する。
+5. 左下のブランチ名をクリックして **main** に戻り、同じ操作で作成した練習ブランチへ再び切り替える。
+
+ブランチを作った直後は、mainとファイルの内容は同じです。また、作成したブランチはまだPC上にしかありません。
 
 ## 完了条件
 
-- `git branch --show-current` で作業branch名が表示される
-- branchを分ける理由と名前の意味を、このIssueにコメントする
+- VS Codeで練習ブランチの作成と切り替えができる
+- ブランチを分ける理由と名前の意味を、このIssueにコメントする
 - **Close issue** でこのIssueを閉じる（変更・commit・PRはまだ不要）
+
+操作の参考: [VS Code公式ドキュメント](https://code.visualstudio.com/docs/sourcecontrol/branches-worktrees)
