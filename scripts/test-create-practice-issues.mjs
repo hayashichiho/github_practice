@@ -7,6 +7,7 @@ function fakeApi(issues = []) {
   return {
     issues,
     created: 0,
+    updates: [],
     repository: async () => ({ has_issues: true }),
     listIssues: async () => structuredClone(issues),
     async createIssue(body) {
@@ -16,6 +17,7 @@ function fakeApi(issues = []) {
       return issue;
     },
     async updateIssue(number, body) {
+      this.updates.push({ number, ...body });
       Object.assign(issues.find((issue) => issue.number === number), body);
     },
   };
@@ -36,17 +38,38 @@ test('実際の10原稿から作成し、PRが必要な課題に実際のIssue�
   });
 });
 
-test('再実行で、閉じた・改題したIssueも重複せず、編集した本文を保持する', async () => {
+test('再実行でタイトルと本文を更新し、Issue番号・Closed状態・コメントは保持する', async () => {
   const api = fakeApi();
   const quests = await loadQuests();
   await registerQuests(api, quests);
   api.issues[0].title = '変更したタイトル';
   api.issues[0].state = 'closed';
   api.issues[0].body += '\n参加者のメモ';
-  const before = structuredClone(api.issues);
-  await registerQuests(api, quests);
+  api.issues[0].comments = [{ body: '確認結果のメモ' }];
+  const number = api.issues[0].number;
+  const updatedQuests = quests.map((quest, index) => index === 0
+    ? { ...quest, title: `${quest.title}（更新）`, body: `${quest.body}\n新しい手順` }
+    : quest);
+  const results = await registerQuests(api, updatedQuests);
   assert.equal(api.created, 10);
-  assert.deepEqual(api.issues, before);
+  assert.equal(api.issues[0].number, number);
+  assert.equal(api.issues[0].title, updatedQuests[0].title);
+  assert.equal(api.issues[0].body, issueBody(updatedQuests[0], number));
+  assert.equal(api.issues[0].state, 'closed');
+  assert.deepEqual(api.issues[0].comments, [{ body: '確認結果のメモ' }]);
+  assert.equal(results[0].status, '更新');
+  assert.ok(api.updates.every((update) => !('state' in update) && !('comments' in update)));
+});
+
+test('原稿に変更がない再実行では、Issueを重複作成せず更新APIも呼ばない', async () => {
+  const api = fakeApi();
+  const quests = await loadQuests();
+  await registerQuests(api, quests);
+  api.updates.length = 0;
+  const results = await registerQuests(api, quests);
+  assert.equal(api.created, 10);
+  assert.equal(api.updates.length, 0);
+  assert.ok(results.every((result) => result.status === '変更なし'));
 });
 
 test('画像と資料リンクを同じForkのIssue用パスに変換し、外部URLは保持する', async () => {
@@ -65,13 +88,14 @@ test('画像と資料リンクを同じForkのIssue用パスに変換し、外�
   }
 });
 
-test('同名の手動Issueは保持し、同名のPRは登録済み課題とみなさない', async () => {
+test('同名の手動Issueも原稿へ更新し、同名のPRは登録済み課題とみなさない', async () => {
   const quests = await loadQuests();
   const manual = { title: quests[0].title, number: 5, body: '手動の本文' };
   const api = fakeApi([manual, { title: quests[1].title, number: 6, pull_request: {} }]);
   await registerQuests(api, quests);
   assert.equal(api.created, 9);
-  assert.equal(manual.body, '手動の本文');
+  assert.equal(manual.body, issueBody(quests[0], 5));
+  assert.ok(api.issues.some((issue) => issue.title === quests[1].title && !issue.pull_request));
 });
 
 test('作成後の番号反映が失敗しても再実行で復旧し、Issueを増やさない', async () => {
@@ -89,7 +113,7 @@ test('作成後の番号反映が失敗しても再実行で復旧し、Issueを
   assert.doesNotMatch(api.issues[0].body, /github-practice:pending/);
 });
 
-test('旧8課題を登録済みなら識別子を引き継ぎ、基礎2課題だけを追加する', async () => {
+test('旧8課題は番号を保って最新版へ更新し、基礎2件だけを追加する', async () => {
   const quests = await loadQuests();
   const previous = quests.slice(2).map((quest, index) => ({
     title: `以前の課題 ${index + 1}`, number: index + 1, body: quest.marker,
@@ -99,7 +123,10 @@ test('旧8課題を登録済みなら識別子を引き継ぎ、基礎2課題だ
   await registerQuests(api, quests);
   assert.equal(api.created, 2);
   assert.equal(api.issues.length, 10);
-  assert.equal(api.issues[0].title, '以前の課題 1');
+  assert.equal(api.issues[0].title, quests[2].title);
+  assert.equal(api.issues[0].number, 1);
+  assert.match(api.issues[0].body, /Closes #1\b/);
+  assert.match(api.issues[0].body, /feature\/1-add-task-form/);
 });
 
 test('Issuesが無効なら作成を始めず、設定方法を案内する', async () => {

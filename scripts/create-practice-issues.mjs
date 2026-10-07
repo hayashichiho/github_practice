@@ -38,7 +38,7 @@ export function issueBody(quest, number) {
     })}\n\n${quest.marker}`;
 }
 
-/** 未登録課題だけを作成する。番号反映に失敗したIssueは次回の実行で復旧する。 */
+/** 未登録課題を作成し、登録済み課題のタイトル・本文を最新の原稿に揃える。 */
 export async function registerQuests(api, quests) {
   const repository = await api.repository();
   if (!repository.has_issues) throw new Error('Settings → General → Features でIssuesを有効にしてください。');
@@ -47,16 +47,18 @@ export async function registerQuests(api, quests) {
   for (const quest of quests) {
     let issue = existing.find((item) => item.body?.includes(quest.marker))
       ?? existing.find((item) => item.title === quest.title);
-    let status = '登録済み';
+    let status = '変更なし';
     if (!issue) {
       // Issue番号は作成後に決まる。途中失敗を識別できる本文でまず作成する。
       issue = await api.createIssue({ title: quest.title, body: `${quest.body}\n\n${quest.marker}\n${pendingMarker}` });
       existing.push(issue);
       status = '作成';
     }
-    if (issue.body?.includes(quest.marker) && issue.body.includes(pendingMarker)) {
-      await api.updateIssue(issue.number, { body: issueBody(quest, issue.number) });
-      if (status !== '作成') status = '番号反映を復旧';
+    const body = issueBody(quest, issue.number);
+    if (issue.title !== quest.title || issue.body !== body) {
+      // stateは送らず、Closedの課題やコメントをそのまま残す。
+      await api.updateIssue(issue.number, { title: quest.title, body });
+      if (status !== '作成') status = '更新';
     }
     results.push({ title: quest.title, number: issue.number, status });
   }
